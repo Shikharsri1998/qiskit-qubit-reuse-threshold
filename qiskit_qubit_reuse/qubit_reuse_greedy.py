@@ -77,6 +77,49 @@ class Greedy:
         """
         if self.__qubit_mapping.get(index, None) is None:  # In case the qubit hasn't been assigned
             # Case measure is available
+            if len(self.__measured_qubits) > 0:               # If there are measured qubits available
+                # Collect from the measured qubits queue.
+                new_index = self.__measured_qubits.pop(0)    
+                check_threshold=self.__count_indices_for_value(new_index)
+                with open('threshold.txt', 'r') as file:
+                    threshold_value = int(file.read().strip())
+
+                if check_threshold > threshold_value:
+                    print("threshold value is",threshold_value)
+                #if check_threshold>1:  
+                    # Map the new qubit to the index from the current_added qubit
+                    self.__qubit_mapping[index] = self.__current_added_qubit   # At the very beggininng, self.__current_added_qubit will be 0
+                    # Increase latest added qubit index.
+                    self.__current_added_qubit += 1
+                    # Add a new qubit to the dag.
+                    self.dag.add_qubits([Qubit()])
+                else:
+
+                    # Applies a reset operation to set qubit.      
+                    self.dag.apply_operation_back(
+                        op=Reset(), qargs=(self.dag.qubits[new_index],), cargs=()
+                    )
+                    # Map this qubit to the new one.
+                    self.__qubit_mapping[index] = new_index       # many into a few mapping: old circuit to new circyit mapping, more num of qubits to less num of qubits mapping
+
+            # Case no measured qubits available
+            else:  
+                # Map the new qubit to the index from the current_added qubit
+                self.__qubit_mapping[index] = self.__current_added_qubit   # At the very beggininng, self.__current_added_qubit will be 0
+                # Increase latest added qubit index.
+                self.__current_added_qubit += 1
+                # Add a new qubit to the dag.
+                self.dag.add_qubits([Qubit()])
+
+    def __count_indices_for_value(self, value) -> int:
+        count = 0
+        for v in self.__qubit_mapping.values():
+            if v == value:
+                count += 1
+        return count
+    """
+        if self.__qubit_mapping.get(index, None) is None:  # In case the qubit hasn't been assigned
+            # Case measure is available
             if len(self.__measured_qubits) > 0:
                 # Collect from the measured qubits queue.
                 new_index = self.__measured_qubits.pop(0)
@@ -93,6 +136,7 @@ class Greedy:
                 self.__current_added_qubit += 1
                 # Add a new qubit to the dag.
                 self.dag.add_qubits([Qubit()])
+                """
 
     def __create_subpath(self, qubit: Qubit | int, until_node: DAGOpNode | None = None) -> None:
         """
