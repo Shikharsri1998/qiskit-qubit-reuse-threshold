@@ -1,4 +1,5 @@
 # Qubit Reuse By Reset Plugin
+# You must select upper limit on number of allowed resets on every qubit and call that number "threshold" write that to "threshold.txt". Put threshold.txt file in #the current folder where you are running your python file.
 
 This repository contains an experimental transpiler pass called `qubit_reuse` which is executed at the end of the `init` stage of transpilation. This pass is based on: Matthew DeCross et al. "Qubit-reuse compilation with mid-circuit measurement and reset" [arXiv:2210.0.08039v1](https://arxiv.org/abs/2210.08039v1)
 
@@ -23,22 +24,18 @@ Before re-arranging a qubit, we need to check if there are any qubit that have b
 This package is not available through pypi, but can be installed by cloning this repository:
 
 ```zsh
-git clone https://github.com/qiskit-community/qiskit-qubit-reuse
+git clone https://github.com/qiskit-community/qiskit-qubit-reuse-threshold
 ```
 And then installing locally:
 
 ```zsh
-pip install ./qiskit-qubit-reuse
+pip install ./qiskit-qubit-reuse-threshold
 ```
-If you have the proper authentication keys, you can install it remotely by using:
 
-```zsh
-pip install git+https://github.com/qiskit-community/qiskit-qubit-reuse
-```
 
 ## Usage
 
-Once installed, Qiskit is able to detect the `qubit_reuse` plugin via an entry point. All that needs to be done is to specify the init method in your `transpile` call by using `init_method="qubit_reuse"`. Use the following example:
+Once installed, Qiskit is able to detect the `qubit_reuse` plugin via an entry point.  Specify the init method in your `transpile` call by using `init_method="qubit_reuse"`. Also, create the "threshold.txt" file in the current folder where you will execute your python file. Write value of threshold in "threshold.txt". Then you can use the plugin. See the following example:
 
 ```py3
 from qiskit.circuit.random import random_circuit
@@ -49,7 +46,9 @@ qc = random_circuit(16, 4, measure=True)
 
 transpiled_qc = transpile(qc, backend=FakeGuadalupeV2(), init_method="qubit_reuse")
 ```
-
-This entry point provides the option with the least amount of qubits. If you want to specifically use the normal or dual circuit, you can specifcy that by using the `qubit_reuse_normal` or the `qubit_reuse_dual` endpoints.
+```
+This entry point provides the option with the least amount of qubits.
+```
+If you want to specifically use the normal or dual circuit, you can specifcy that by using the `qubit_reuse_normal` or the `qubit_reuse_dual` endpoints.
 
 **Warning: This plugin should only be used with circuits that contain measurements.**
