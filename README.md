@@ -31,7 +31,9 @@ And then installing locally:
 ```zsh
 pip install ./qiskit-qubit-reuse-threshold
 ```
-
+## Uninstallation
+```zsh
+pip uninstall qiskit-qubit-reuse
 
 ## Usage
 
