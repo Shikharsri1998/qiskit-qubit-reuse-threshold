@@ -34,7 +34,7 @@ pip install ./qiskit-qubit-reuse-threshold
 ## Uninstallation
 ```zsh
 pip uninstall qiskit-qubit-reuse
-
+```
 ## Usage
 
 Once installed, Qiskit is able to detect the `qubit_reuse` plugin via an entry point.  Specify the init method in your `transpile` call by using `init_method="qubit_reuse"`. Also, create the "threshold.txt" file in the current folder where you will execute your python file. Write value of threshold in "threshold.txt". Then you can use the plugin. See the following example:
